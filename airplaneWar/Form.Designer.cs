@@ -1,4 +1,5 @@
-﻿namespace airplaneWar
+﻿
+namespace airplaneWar
 {
     partial class MainForm
     {
@@ -29,37 +30,50 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            gamePanel = new Panel();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             gameTimer = new System.Windows.Forms.Timer(components);
             shootTimer = new System.Windows.Forms.Timer(components);
             paintTime = new System.Windows.Forms.Timer(components);
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            contextMenuStrip2 = new ContextMenuStrip(components);
+            pnlContainer = new Panel();
             SuspendLayout();
             // 
-            // gamePanel
+            // contextMenuStrip1
             // 
-            gamePanel.Location = new Point(12, 12);
-            gamePanel.Name = "gamePanel";
-            gamePanel.Size = new Size(444, 353);
-            gamePanel.TabIndex = 0;
-            gamePanel.Paint += GamePanel_Paint;
+            contextMenuStrip1.ImageScalingSize = new Size(24, 24);
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            resources.ApplyResources(contextMenuStrip1, "contextMenuStrip1");
+            // 
+            // contextMenuStrip2
+            // 
+            contextMenuStrip2.ImageScalingSize = new Size(24, 24);
+            contextMenuStrip2.Name = "contextMenuStrip2";
+            resources.ApplyResources(contextMenuStrip2, "contextMenuStrip2");
+            // 
+            // pnlContainer
+            // 
+            resources.ApplyResources(pnlContainer, "pnlContainer");
+            pnlContainer.Name = "pnlContainer";
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(11F, 24F);
+            resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(716, 533);
-            Controls.Add(gamePanel);
+            Controls.Add(pnlContainer);
             KeyPreview = true;
             Name = "MainForm";
-            Text = "Form1";
             ResumeLayout(false);
         }
 
         #endregion
-
-        private Panel gamePanel;
-        private System.Windows.Forms.Timer gameTimer;
+        //private System.Windows.Forms.Timer gameTimer;
         private System.Windows.Forms.Timer shootTimer;
         private System.Windows.Forms.Timer paintTime;
+        private ContextMenuStrip contextMenuStrip1;
+        private ContextMenuStrip contextMenuStrip2;
+        private Panel pnlContainer;
     }
 }
+
+
