@@ -99,7 +99,7 @@ namespace airplaneWar.Core.Manager.PanelManager
 
         private Stopwatch gameStopwatch;
         private double accumulatedTime = 0;
-        private const int FPS = 30;
+        private const int FPS = 120;
         private double targetFramTime = 1000 / FPS;
 
 
@@ -113,20 +113,12 @@ namespace airplaneWar.Core.Manager.PanelManager
             gameStopwatch = Stopwatch.StartNew();
             Task.Run(() => GameLoop());
         }
-
-
         enum PanelType
         {
             Start,
             Game,
             Result
         }
-
-        //public PanelManager(Control container)
-        //{
-        //    _container = container ?? throw new ArgumentNullException(nameof(container));
-        //}
-
         // 导航到新Panel
         public void NavigateTo<T>(IPanelArgs args = null) where T : UserControl, IPanel
         {
@@ -194,21 +186,12 @@ namespace airplaneWar.Core.Manager.PanelManager
 
         private void on_update(double deltaTime)
         {
-            //Console.WriteLine(deltaTime);
-            //float deltaTimeSconds = (float)(deltaTime / 1000.0);
             if (_panelStack.Count > 0)
             {
                 _panelStack.Peek().on_update(deltaTime);
             }
         }
 
-        //public void Paint(PaintEventArgs e)
-        //{
-        //    if (_panelStack.Count > 0)
-        //    {
-        //        _panelStack.Peek().on_paint(e);
-        //    }
-        //}
     }
 
     // Panel 工厂

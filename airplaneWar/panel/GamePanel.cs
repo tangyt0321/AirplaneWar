@@ -1,32 +1,29 @@
 ﻿using System;
 using airplaneWar.Panels.Core;
-using System.Diagnostics;
-using Timer = System.Windows.Forms.Timer;
 using airplaneWar.Core.Manager.PanelManager;
-using airplaneWar.Core.Manager.CollisionManager;
-using airplaneWar.GameLogic.Entities.Enemies;
-using airplaneWar.GameLogic.Entities.Player;
+//using airplaneWar.Core.Manager.CollisionManager;
 using airplaneWar.GameLogic.Core;
 using System.Numerics;
 using airplaneWar.Core.Manager.InputManager;
+using airplaneWar.Panels.Start;
+using airplaneWar.Panels.Result;
+using airplaneWar.Core.Manager;
 //using airplaneWar.GameLogic.Core;
 
 namespace airplaneWar.Panels.Game
 {
     public partial class GamePanel : UserControl, IPanel
     {
-        //private Timer _gameLoopTimer;
-        private CollisionManager _collisionManager;
         private double currentFPS = 0;
         private bool is_pause = false;
+        private PictureBox miniMap;
+        private static readonly Font DefaultFont = new Font("Arial", 12);
 
         public void on_enter(object args)
         {
             // 初始化游戏元素
             GameWorld.Instance.InitializeGameWorld();
-
-            // 初始化碰撞管理器
-            _collisionManager = new CollisionManager();
+            miniMap = new();
             // 初始化输入管理器
             InputManager.Instance.Initialize(this);
             // 绑定绘制事件
@@ -38,33 +35,41 @@ namespace airplaneWar.Panels.Game
         public void on_render(Graphics g)
         {
             GameWorld.Instance.RenderGameWorld(g);
-            g.DrawString($"FPS: {currentFPS:F1}", Font, Brushes.Black, 10, 10);
+            g.DrawString($"FPS: {currentFPS:F1}", DefaultFont, Brushes.Red, 10, 10);
+            g.DrawString($"Score: {EventManager.score}", DefaultFont, Brushes.Red, 10, 70);
         }
 
         public void on_update(double deltaTime)
         {
-            //Console.WriteLine(InputManager.Instance.GetKey(Keys.P));
+            //计算试试帧率
             currentFPS = 1000 / deltaTime;
+            //处理输入
             ProcessInput();
             InputManager.Instance.Update(deltaTime);
+            //是否时停
             if (is_pause) { return; }
-
             // 更新游戏世界状态
             GameWorld.Instance.on_update(deltaTime);
+            if (!GameWorld.Instance.Player.IsAlive)
+            {
+                is_pause = true;
+                this.on_exit();
+                PanelManager.Instance.NavigateTo<resultPanel>();
+            }
 
-            Invalidate(); // 触发重绘
-
-            //_collisionManager.on_update(deltaTime);
+            // 触发重绘
+            Invalidate();
         }
 
         public void on_exit()
         {
-            //_gameLoopTimer.Stop();
-            //_gameLoopTimer.Dispose();
+            InputManager.Instance.Dispose();
+            //GameWorld.Instance.;
         }
 
         public void on_return(object data)
         {
+
         }
 
 
@@ -77,6 +82,14 @@ namespace airplaneWar.Panels.Game
             {
                 is_pause = !is_pause;
             }
+
+            if (InputManager.Instance.GetKeyDown(Keys.Escape))
+            {
+                this.on_exit();
+                PanelManager.Instance.NavigateTo<resultPanel>();
+            }
+
+            CameraMove();
 
 
         }
@@ -124,6 +137,8 @@ namespace airplaneWar.Panels.Game
             }
             GameWorld.Instance.Player.IsMove = isMove;
             GameWorld.Instance.Player.Angle = moveDirection;
+            //GameWorld.Instance.camera.is_move = isMove;
+            //GameWorld.Instance.camera.angle = moveDirection;
         }
         private void PlayerShoot()
         {
@@ -134,6 +149,31 @@ namespace airplaneWar.Panels.Game
             else
             {
                 GameWorld.Instance.Player.IsShooting = false;
+            }
+        }
+        private void CameraMove()
+        {
+            //鼠标移动到边缘
+            bool isNearEdge = InputManager.Instance.MousePosition.X <= this.Width * 0.1 ||
+                InputManager.Instance.MousePosition.X >= this.Width * 0.9 ||
+                InputManager.Instance.MousePosition.Y <= this.Height * 0.1 ||
+                InputManager.Instance.MousePosition.Y >= this.Height * 0.9;
+            if (isNearEdge)
+            {
+                //GameWorld.Instance.camera.is_move = true;
+                //GameWorld.Instance.camera.angle = Math.Atan2(InputManager.Instance.MousePosition.Y - this.Height / 2, InputManager.Instance.MousePosition.X - this.Width / 2);
+            }
+            else if (InputManager.Instance.GetMouseButton(MouseButtons.Right))//鼠标右键按下
+            {
+                GameWorld.Instance.camera.is_move = true;
+                GameWorld.Instance.camera.angle = Math.Atan2(
+                    InputManager.Instance.MousePosition.Y - this.Height / 2,
+                    InputManager.Instance.MousePosition.X - this.Width / 2
+                    );
+            }
+            else
+            {
+                GameWorld.Instance.camera.is_move = false;
             }
         }
     }

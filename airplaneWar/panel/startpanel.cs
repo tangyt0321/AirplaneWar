@@ -10,26 +10,31 @@ namespace airplaneWar.Panels.Start
 
     public partial class startPanel : UserControl, IPanel
     {
+        private Image startMenuImage;
         public void on_enter(object args)
         {
+            startMenuImage = Image.FromFile("D:\\code\\project\\airplaneWar\\airplaneWar\\Resources\\menu_bkg.png");
+
             InputManager.Instance.Initialize(this);
+            this.Paint += new PaintEventHandler((sender, e) => on_render(e.Graphics));
+            this.DoubleBuffered = true;
         }
 
         public void on_update(double delta)
         {
             ProcessInput();
+            InputManager.Instance.Update(delta);
         }
 
 
         public void on_render(Graphics g)
         {
+            g.DrawImage(startMenuImage, 0, 0, this.Size.Width, this.Size.Height);
             this.Invalidate();
         }
 
         public void on_exit()
         {
-            //this.KeyDown -= new KeyEventHandler(Key_down);
-            //this.TabIndex = 0;
         }
 
         public void on_return(object data)
@@ -43,8 +48,9 @@ namespace airplaneWar.Panels.Start
             if (InputManager.Instance.GetKeyDown(Keys.Space))
             {
                 // 进入游戏
+                this.on_exit();
                 PanelManager.Instance.NavigateTo<GamePanel>();
-                Console.WriteLine("进入游戏");
+                //Console.WriteLine("进入游戏");
             }
         }
     }

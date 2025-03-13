@@ -31,7 +31,6 @@ namespace airplaneWar.Core.Manager
                 EnemyType.normal => new NormalEnemy(),
                 _ => throw new ArgumentException("未知敌人类型")
             };
-            //enemy.Reset();
             pools[type].Enqueue(enemy);
         }
 

@@ -7,8 +7,8 @@ namespace airplaneWar
     public partial class MainForm : Form
     {
         // 窗体基础配置
-        private const int DesignWidth = 2560;  // 设计分辨率宽度
-        private const int DesignHeight = 1440; // 设计分辨率高度
+        public const int DesignWidth = 2560;  // 设计分辨率宽度
+        public const int DesignHeight = 1440; // 设计分辨率高度
 
         // 容器控件（用于动态加载Panel）
         private readonly Panel _mainContainer = new Panel
@@ -17,8 +17,6 @@ namespace airplaneWar
             BackColor = Color.Black
         };
         private PanelManager panelManager;
-        //private GameManager GameManager = new GameManager();
-        //private InputManager inputManager;
         private System.Windows.Forms.Timer gameTimer;
 
         public MainForm()
@@ -58,8 +56,6 @@ namespace airplaneWar
         // 初始化核心系统
         private void InitializeCoreSystems()
         {
-            // 输入系统
-            //InputManager.Instance.Initialize(this);
 
             // 资源加载
             //ResourceLoader.LoadTextures();

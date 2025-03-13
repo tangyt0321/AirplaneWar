@@ -1,4 +1,5 @@
-﻿using System;
+﻿using airplaneWar.GameLogic.Collision;
+using System;
 using System.Numerics;
 
 
@@ -18,15 +19,11 @@ namespace airplaneWar.GameLogic.Entities.Enemies.Core
         private double HP { get; set; }
         public bool IsAlive { get; set; } = true;
         public double Angle { get; set; } = double.NaN;
-        public void Hurt()
-        {
-            HP--;
-            if (HP <= 0)
-                IsAlive = false;
-        }
-        public abstract void on_update(Vector2 Position, double delta);
+        public abstract CollisionBox Hitbox { get; }
+        public abstract void Hurt(int damage);
+        public abstract void on_update(double delta);
         public abstract void on_render(Graphics g);
-
+        public abstract void on_render(Graphics g, Vector2 position);
     }
 
 }

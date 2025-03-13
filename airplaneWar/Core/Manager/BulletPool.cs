@@ -22,8 +22,9 @@ namespace airplaneWar.Core.Manager
             for (int i = 0; i < maxPoolSize; i++)
             {
                 AddBulletToPool(BulletType.Normal);
-                AddBulletToPool(BulletType.Homing);
-                AddBulletToPool(BulletType.Explosive);
+                //AddBulletToPool(BulletType.Penetrate);
+                //AddBulletToPool(BulletType.Homing);
+                //AddBulletToPool(BulletType.Explosive);
             }
         }
 
@@ -32,8 +33,9 @@ namespace airplaneWar.Core.Manager
             IBullet bullet = type switch
             {
                 BulletType.Normal => new NormalBullet(),
-                BulletType.Homing => new HomingBullet(),
-                BulletType.Explosive => new ExplosiveBullet(),
+                //BulletType.Penetrate => new PenetrateBullet(),
+                //BulletType.Homing => new HomingBullet(),
+                //BulletType.Explosive => new ExplosiveBullet(),
                 _ => throw new ArgumentException("未知子弹类型")
             };
             bullet.Reset();
@@ -59,8 +61,9 @@ namespace airplaneWar.Core.Manager
             BulletType type = bullet switch
             {
                 NormalBullet => BulletType.Normal,
-                HomingBullet => BulletType.Homing,
-                ExplosiveBullet => BulletType.Explosive,
+                //PenetrateBullet => BulletType.Penetrate,
+                //HomingBullet => BulletType.Homing,
+                //ExplosiveBullet => BulletType.Explosive,
                 _ => throw new InvalidOperationException()
             };
             pools[type].Enqueue(bullet);
