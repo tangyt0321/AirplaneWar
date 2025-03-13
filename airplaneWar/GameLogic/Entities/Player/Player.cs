@@ -22,10 +22,12 @@ namespace airplaneWar.GameLogic.Entities.Player
         public bool IsMove { get; set; }
 
         public double Angle { get; set; } = 0;
-        //double last_shoot_time = 0;
-        double last_hurt_time = 0;
-        double Invincible_time = 0.5 * 1000;
-        //public double ShootInterval { get; set; } = 0.5;
+
+        public double last_hurt_time { get; set; } = 0;
+        public double Invincible_time = 0.5 * 1000;
+        public double last_shoot_time { get; set; } = 0;
+        public double shoot_interval = 0.1 * 1000;
+
         int Projectile.damage { get; set; } = 0;
 
 
@@ -46,15 +48,22 @@ namespace airplaneWar.GameLogic.Entities.Player
             {
                 if (hitbox.objest_src is IEnemy)
                 {
-                    var x = (hitbox.objest_src.collision_dst.X + hitbox.objest_dst.collision_dst.X + hitbox.objest_src.collision_dst.Width / 2 + hitbox.objest_dst.collision_dst.Width / 2) / 2;
-                    var y = (hitbox.objest_src.collision_dst.Y + hitbox.objest_dst.collision_dst.Y + hitbox.objest_src.collision_dst.Height / 2 + hitbox.objest_dst.collision_dst.Height / 2) / 2;
-                    var angle = Math.Atan2(y - (hitbox.objest_dst.collision_dst.Y + hitbox.objest_dst.collision_dst.Height / 2), x - (hitbox.objest_dst.collision_dst.X + hitbox.objest_dst.collision_dst.Width / 2));
-                    this.Position -= new Vector2((float)(Math.Cos(angle) * Speed * 10), (float)(Math.Sin(angle) * Speed * 10));
+                    var x = (
+                        hitbox.objest_src.collision_dst.X + hitbox.objest_src.collision_dst.Width / 2 +
+                        hitbox.objest_dst.collision_dst.X + hitbox.objest_dst.collision_dst.Width / 2) / 2;
+                    var y = (
+                        hitbox.objest_src.collision_dst.Y + hitbox.objest_src.collision_dst.Height / 2 +
+                        hitbox.objest_dst.collision_dst.Y + hitbox.objest_dst.collision_dst.Height / 2) / 2;
+                    var angle = Math.Atan2(
+                        y - (hitbox.objest_dst.collision_dst.Y + hitbox.objest_dst.collision_dst.Height / 2),
+                        x - (hitbox.objest_dst.collision_dst.X + hitbox.objest_dst.collision_dst.Width / 2));
+                    this.Position -= new Vector2(
+                        (float)(Math.Cos(angle) * Speed * 10),
+                        (float)(Math.Sin(angle) * Speed * 10));
 
                     if (last_hurt_time > Invincible_time)
                     {
-                        Console.WriteLine("1");
-                        hurt(hitbox.objest_src.damage);
+                        //hurt(hitbox.objest_src.damage);
                         last_hurt_time = 0;
                     }
 
@@ -90,7 +99,14 @@ namespace airplaneWar.GameLogic.Entities.Player
 
             collision_dst = new RectangleF(Position.X, Position.Y, size.Width, size.Height);
             collision_src = new RectangleF(Position.X, Position.Y, size.Width, size.Height);
+
             last_hurt_time += delta;
+            last_shoot_time += delta;
+
+            if (last_shoot_time > shoot_interval)
+            {
+                IsShooting = true;
+            }
 
             if (!IsMove)
             {

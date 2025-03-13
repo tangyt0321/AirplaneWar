@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace airplaneWar.GameLogic.Core
+namespace airplaneWar.GameLogic
 {
     public class ProjectTimer
     {
@@ -53,7 +53,7 @@ namespace airplaneWar.GameLogic.Core
             pass_time += delta;
             if (pass_time >= wait_time)
             {
-                bool can_shot = (!one_shot || (one_shot && !shotted));//单次触发//
+                bool can_shot = !one_shot || one_shot && !shotted;//单次触发//
                 shotted = true;
                 if (can_shot && on_timeout != null)
                     on_timeout();

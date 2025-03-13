@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using airplaneWar.Panels.Core;
-using airplaneWar.Panels.Game;
+using airplaneWar.GameLogic.panel;
 
 
 

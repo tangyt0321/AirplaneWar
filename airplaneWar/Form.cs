@@ -1,5 +1,5 @@
 using airplaneWar.Core.Manager.PanelManager;
-using airplaneWar.Panels.Start;
+using airplaneWar.GameLogic.panel;
 using Untrie;
 
 namespace airplaneWar
@@ -17,7 +17,7 @@ namespace airplaneWar
             BackColor = Color.Black
         };
         private PanelManager panelManager;
-        private System.Windows.Forms.Timer gameTimer;
+        //private System.Windows.Forms.Timer gameTimer;
 
         public MainForm()
         {
@@ -47,7 +47,7 @@ namespace airplaneWar
             this.Controls.Add(_mainContainer);
             _mainContainer.BackColor = Color.Black;
 
-            gameTimer = new System.Windows.Forms.Timer();
+            //gameTimer = new System.Windows.Forms.Timer();
 
             // 窗口尺寸变化事件
             //this.Resize += (s, e) => ScreenManager.HandleResolutionChange();

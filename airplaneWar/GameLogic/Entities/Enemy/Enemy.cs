@@ -38,10 +38,18 @@ namespace airplaneWar.GameLogic.Entities.Enemies
                 }
                 if (hitbox.objest_src is IEnemy || hitbox.objest_src is Player.Player)
                 {
-                    var x = (hitbox.objest_src.collision_dst.X + hitbox.objest_dst.collision_dst.X + hitbox.objest_src.collision_dst.Width / 2 + hitbox.objest_dst.collision_dst.Width / 2) / 2;
-                    var y = (hitbox.objest_src.collision_dst.Y + hitbox.objest_dst.collision_dst.Y + hitbox.objest_src.collision_dst.Height / 2 + hitbox.objest_dst.collision_dst.Height / 2) / 2;
-                    var angle = Math.Atan2(y - (hitbox.objest_dst.collision_dst.Y + hitbox.objest_dst.collision_dst.Height / 2), x - (hitbox.objest_dst.collision_dst.X + hitbox.objest_dst.collision_dst.Width / 2));
-                    this.Position -= new Vector2((float)(Math.Cos(angle) * Speed * 10), (float)(Math.Sin(angle) * Speed * 10));
+                    var x = (
+                        hitbox.objest_src.collision_dst.X + hitbox.objest_src.collision_dst.Width / 2 +
+                        hitbox.objest_dst.collision_dst.X + hitbox.objest_dst.collision_dst.Width / 2) / 2;
+                    var y = (
+                        hitbox.objest_src.collision_dst.Y + hitbox.objest_src.collision_dst.Height / 2 +
+                        hitbox.objest_dst.collision_dst.Y + hitbox.objest_dst.collision_dst.Height / 2) / 2;
+                    var angle = Math.Atan2(
+                        y - (hitbox.objest_dst.collision_dst.Y + hitbox.objest_dst.collision_dst.Height / 2),
+                        x - (hitbox.objest_dst.collision_dst.X + hitbox.objest_dst.collision_dst.Width / 2));
+                    this.Position -= new Vector2(
+                        (float)(Math.Cos(angle) * Speed * 10),
+                        (float)(Math.Sin(angle) * Speed * 10));
                 }
             };
         }

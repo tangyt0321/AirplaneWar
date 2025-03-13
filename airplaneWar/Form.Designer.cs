@@ -31,7 +31,6 @@ namespace airplaneWar
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            gameTimer = new System.Windows.Forms.Timer(components);
             shootTimer = new System.Windows.Forms.Timer(components);
             paintTime = new System.Windows.Forms.Timer(components);
             contextMenuStrip1 = new ContextMenuStrip(components);

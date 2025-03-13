@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace airplaneWar.Panels.Core
+namespace airplaneWar.GameLogic.panel
 {
     public interface IPanel
     {

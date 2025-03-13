@@ -1,5 +1,4 @@
 ﻿using airplaneWar.GameLogic.Collision;
-using System.Numerics;
 
 namespace airplaneWar.Core.Manager.CollisionManager
 {
@@ -29,6 +28,11 @@ namespace airplaneWar.Core.Manager.CollisionManager
         {
             CollisionList.Remove(collisionBox);
             collisionBox.is_active = false;
+        }
+
+        public void clear_collision()
+        {
+            CollisionList.Clear();
         }
 
         public void on_collide(double deltaTime)

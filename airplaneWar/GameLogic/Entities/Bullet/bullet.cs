@@ -17,7 +17,11 @@ namespace airplaneWar.GameLogic.Entities.Bullet
         public RectangleF collision_src { get; set; }
         public RectangleF collision_dst { get; set; }
 
-        public override int damage { get => DAMAGE; set; }
+        public override int damage
+        {
+            get { return DAMAGE; }
+            set { /* Do nothing or throw an exception if setting is not allowed */ }
+        }
         public override CollisionBox Hitbox => hitbox;
 
         public NormalBullet()

@@ -1,23 +1,21 @@
 ﻿using System;
-using airplaneWar.Panels.Core;
 using airplaneWar.Core.Manager.PanelManager;
 //using airplaneWar.Core.Manager.CollisionManager;
-using airplaneWar.GameLogic.Core;
 using System.Numerics;
 using airplaneWar.Core.Manager.InputManager;
-using airplaneWar.Panels.Start;
-using airplaneWar.Panels.Result;
+using airplaneWar.GameLogic.panel;
 using airplaneWar.Core.Manager;
-//using airplaneWar.GameLogic.Core;
+using airplaneWar.GameLogic.Entities.Bullet.Core;
+using airplaneWar.GameLogic;
 
-namespace airplaneWar.Panels.Game
+namespace airplaneWar.GameLogic.panel
 {
     public partial class GamePanel : UserControl, IPanel
     {
         private double currentFPS = 0;
         private bool is_pause = false;
-        private PictureBox miniMap;
-        private static readonly Font DefaultFont = new Font("Arial", 12);
+        private PictureBox? miniMap;
+        private static new readonly Font DefaultFont = new Font("Arial", 12);
 
         public void on_enter(object args)
         {
@@ -27,8 +25,8 @@ namespace airplaneWar.Panels.Game
             // 初始化输入管理器
             InputManager.Instance.Initialize(this);
             // 绑定绘制事件
-            this.Paint += new PaintEventHandler((sender, e) => on_render(e.Graphics));
-            this.DoubleBuffered = true;
+            Paint += new PaintEventHandler((sender, e) => on_render(e.Graphics));
+            DoubleBuffered = true;
         }
 
 
@@ -37,6 +35,8 @@ namespace airplaneWar.Panels.Game
             GameWorld.Instance.RenderGameWorld(g);
             g.DrawString($"FPS: {currentFPS:F1}", DefaultFont, Brushes.Red, 10, 10);
             g.DrawString($"Score: {EventManager.score}", DefaultFont, Brushes.Red, 10, 70);
+            g.DrawString($"camera.position {GameWorld.Instance.camera.position}", DefaultFont, Brushes.Red, 10, 100);
+
         }
 
         public void on_update(double deltaTime)
@@ -53,7 +53,7 @@ namespace airplaneWar.Panels.Game
             if (!GameWorld.Instance.Player.IsAlive)
             {
                 is_pause = true;
-                this.on_exit();
+                on_exit();
                 PanelManager.Instance.NavigateTo<resultPanel>();
             }
 
@@ -64,7 +64,7 @@ namespace airplaneWar.Panels.Game
         public void on_exit()
         {
             InputManager.Instance.Dispose();
-            //GameWorld.Instance.;
+            GameWorld.Instance.on_exit();
         }
 
         public void on_return(object data)
@@ -85,7 +85,7 @@ namespace airplaneWar.Panels.Game
 
             if (InputManager.Instance.GetKeyDown(Keys.Escape))
             {
-                this.on_exit();
+                on_exit();
                 PanelManager.Instance.NavigateTo<resultPanel>();
             }
 
@@ -93,8 +93,7 @@ namespace airplaneWar.Panels.Game
 
 
         }
-
-
+        //玩家移动
         private void PlayerMove()
         {
             double moveDirection = double.NaN;
@@ -135,41 +134,51 @@ namespace airplaneWar.Panels.Game
                 moveDirection = Math.PI * 1 / 2;
                 isMove = true;
             }
+
             GameWorld.Instance.Player.IsMove = isMove;
             GameWorld.Instance.Player.Angle = moveDirection;
             //GameWorld.Instance.camera.is_move = isMove;
             //GameWorld.Instance.camera.angle = moveDirection;
         }
+        //子弹发射
         private void PlayerShoot()
         {
             if (InputManager.Instance.GetMouseButton(MouseButtons.Left))//鼠标左键按下
             {
-                GameWorld.Instance.Player.IsShooting = true;
+                //GameWorld.Instance.Player.IsShooting = true;
+                GameWorld.Instance.Shooting(InputManager.Instance.MousePosition, BulletType.Normal);
             }
             else
             {
-                GameWorld.Instance.Player.IsShooting = false;
+                //GameWorld.Instance.Player.IsShooting = false;
             }
         }
+        //摄像机位移
         private void CameraMove()
         {
             //鼠标移动到边缘
-            bool isNearEdge = InputManager.Instance.MousePosition.X <= this.Width * 0.1 ||
-                InputManager.Instance.MousePosition.X >= this.Width * 0.9 ||
-                InputManager.Instance.MousePosition.Y <= this.Height * 0.1 ||
-                InputManager.Instance.MousePosition.Y >= this.Height * 0.9;
+            bool isNearEdge = InputManager.Instance.MousePosition.X <= Width * 0.1 ||
+                InputManager.Instance.MousePosition.X >= Width * 0.9 ||
+                InputManager.Instance.MousePosition.Y <= Height * 0.1 ||
+                InputManager.Instance.MousePosition.Y >= Height * 0.9;
             if (isNearEdge)
             {
-                //GameWorld.Instance.camera.is_move = true;
-                //GameWorld.Instance.camera.angle = Math.Atan2(InputManager.Instance.MousePosition.Y - this.Height / 2, InputManager.Instance.MousePosition.X - this.Width / 2);
-            }
-            else if (InputManager.Instance.GetMouseButton(MouseButtons.Right))//鼠标右键按下
-            {
                 GameWorld.Instance.camera.is_move = true;
-                GameWorld.Instance.camera.angle = Math.Atan2(
-                    InputManager.Instance.MousePosition.Y - this.Height / 2,
-                    InputManager.Instance.MousePosition.X - this.Width / 2
-                    );
+                GameWorld.Instance.camera.angle = Math.Atan2(InputManager.Instance.MousePosition.Y - Height / 2, InputManager.Instance.MousePosition.X - Width / 2);
+            }
+            else if (InputManager.Instance.GetMouseButtonDown(MouseButtons.Right))//鼠标右键按下
+            {
+                //GameWorld.Instance.camera.angle = Math.Atan2(
+                //    InputManager.Instance.MousePosition.Y - this.Height / 2,
+                //    InputManager.Instance.MousePosition.X - this.Width / 2
+                //    );
+                //GameWorld.Instance.camera.angle = Math.Atan2(
+                //    InputManager.Instance.MousePosition.Y + GameWorld.Instance.camera.position.Y,
+                //    InputManager.Instance.MousePosition.X - GameWorld.Instance.camera.position.Y
+                //    );
+                GameWorld.Instance.camera.position =
+                    GameWorld.Instance.camera.position + InputManager.Instance.MousePosition -
+                    new Vector2(GameWorld.Instance.camera.size.Width / 2, GameWorld.Instance.camera.size.Height / 2);
             }
             else
             {

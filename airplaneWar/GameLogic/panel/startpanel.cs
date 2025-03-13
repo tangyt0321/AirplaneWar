@@ -1,11 +1,9 @@
 ﻿using System;
 using airplaneWar.Core.Manager.InputManager;
 using airplaneWar.Core.Manager.PanelManager;
-using airplaneWar.GameLogic.Core;
-using airplaneWar.Panels.Core;
-using airplaneWar.Panels.Game;
+using airplaneWar.GameLogic;
 
-namespace airplaneWar.Panels.Start
+namespace airplaneWar.GameLogic.panel
 {
 
     public partial class startPanel : UserControl, IPanel
@@ -16,8 +14,8 @@ namespace airplaneWar.Panels.Start
             startMenuImage = Image.FromFile("D:\\code\\project\\airplaneWar\\airplaneWar\\Resources\\menu_bkg.png");
 
             InputManager.Instance.Initialize(this);
-            this.Paint += new PaintEventHandler((sender, e) => on_render(e.Graphics));
-            this.DoubleBuffered = true;
+            Paint += new PaintEventHandler((sender, e) => on_render(e.Graphics));
+            DoubleBuffered = true;
         }
 
         public void on_update(double delta)
@@ -29,8 +27,8 @@ namespace airplaneWar.Panels.Start
 
         public void on_render(Graphics g)
         {
-            g.DrawImage(startMenuImage, 0, 0, this.Size.Width, this.Size.Height);
-            this.Invalidate();
+            g.DrawImage(startMenuImage, 0, 0, Size.Width, Size.Height);
+            Invalidate();
         }
 
         public void on_exit()
@@ -48,7 +46,7 @@ namespace airplaneWar.Panels.Start
             if (InputManager.Instance.GetKeyDown(Keys.Space))
             {
                 // 进入游戏
-                this.on_exit();
+                on_exit();
                 PanelManager.Instance.NavigateTo<GamePanel>();
                 //Console.WriteLine("进入游戏");
             }
